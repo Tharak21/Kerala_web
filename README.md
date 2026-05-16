@@ -13,7 +13,7 @@ This project was developed as part of the **23CSE113 – User Interface Design**
 
 Add your deployed link here:
 
-https://github.com/Tharak21/Kerala_web
+https://tharak21.github.io/Kerala_web/
 
 ## 📸 Features
 
@@ -81,7 +81,6 @@ The website is optimized for:
 - Add backend support
 - Add booking functionality
 - Add image gallery slider
-- Improve animations
 - Add dark mode
 
 ## Author
