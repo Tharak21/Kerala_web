@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Jost:wght@200;300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f2419; color: #f5f0e8; font-family: 'Jost', sans-serif; text-align: center; }
+
+  .hero { padding: 120px 20px 60px; }
+  .label { font-size: 11px; letter-spacing: 0.35em; color: #c9a96e; text-transform: uppercase; margin-bottom: 24px; }
+  .title { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 8vw, 90px); font-weight: 300; }
+  .title em { color: #c9a96e; font-style: italic; }
+  .line { width: 50px; height: 1px; background: #c9a96e; margin: 32px auto; opacity: 0.5; }
+  .sub { font-size: 15px; color: rgba(245,240,232,0.6); line-height: 1.8; max-width: 420px; margin: 0 auto; }
+
+  /* JS will fade these in on scroll */
+  .fade { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade.visible { opacity: 1; transform: translateY(0); }
+
+  .team { padding: 60px 20px 100px; max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; }
+
+  .card { background: #1a3a2a; padding: 48px 28px; cursor: pointer; transition: background 0.3s, transform 0.3s; }
+  .card:hover { background: #234d36; transform: translateY(-4px); }
+  .num { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-style: italic; color: rgba(201,169,110,0.12); }
+  .name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; margin-top: 8px; }
+  .name em { color: #c9a96e; font-style: italic; }
+  .role { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a96e; margin-top: 6px; }
+  .quote { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; color: rgba(245,240,232,0.5); margin-top: 18px; line-height: 1.7;
+    max-height: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.5s ease; opacity: 0; }
+  .card.open .quote { max-height: 100px; opacity: 1; }
+
+  /* Toast popup when card clicked */
+  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #1a3a2a; border: 1px solid rgba(201,169,110,0.3); color: #c9a96e;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px;
+    padding: 14px 28px; opacity: 0; transition: all 0.4s ease; pointer-events: none; white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer { padding: 40px; border-top: 1px solid rgba(201,169,110,0.15); font-family: 'Cormorant Garamond', serif; font-style: italic; color: #c9a96e; font-size: 20px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p class="label fade">Explore South India</p>
+  <h1 class="title fade">Meet the <em>Team</em></h1>
+  <div class="line fade"></div>
+  <p class="sub fade">Tap a card to know more about each member.</p>
+</div>
+
+<div class="team">
+  <div class="card fade" data-msg="👋 Hello from Tharak!">
+    <div class="num">01</div>
+    <div class="name">Tharak <em>Gopal</em></div>
+    <div class="role">Founder</div>
+    <div class="quote">"Every route through Kerala is a poem waiting to be walked."</div>
+  </div>
+
+  <div class="card fade" data-msg="✨ Hari crafts every experience!">
+    <div class="num">02</div>
+    <div class="name">Hari <em>Shankar V</em></div>
+    <div class="role">Experience</div>
+    <div class="quote">"I design journeys the way a chef layers flavour — with intention."</div>
+  </div>
+
+  <div class="card fade" data-msg="📖 Sreyak tells the stories!">
+    <div class="num">03</div>
+    <div class="name"><em>Sreyak</em> S</div>
+    <div class="role">Storyteller</div>
+    <div class="quote">"Kerala's soul lives in its rituals, its festivals, its silence."</div>
+  </div>
+
+  <div class="card fade" data-msg="⚙️ Dhananjayan keeps it running!">
+    <div class="num">04</div>
+    <div class="name"><em>Dhananjayan</em></div>
+    <div class="role">Operations</div>
+    <div class="quote">"I make the magic look effortless — so you only feel the wonder."</div>
+  </div>
+</div>
+
+<footer>Kerala is not just a place. It is a feeling.</footer>
+
+<div id="toast"></div>
+
+<script>
+  // 1. SCROLL FADE-IN — watches elements with class "fade" and makes them visible
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade').forEach(el => observer.observe(el));
+
+  // 2. CARD CLICK — toggles the quote open/close + shows a toast message
+  const toast = document.getElementById('toast');
+  let toastTimer;
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      // toggle this card's quote
+      card.classList.toggle('open');
+
+      // show toast
+      toast.textContent = card.dataset.msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    });
+  });
+</script>
+
+</body>
+</html>
